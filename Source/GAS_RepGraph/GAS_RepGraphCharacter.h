@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GASAbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "GAS_RepGraphCharacter.generated.h"
@@ -83,5 +84,8 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	// Ability System
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Abilities")
+	UGASAbilitySystemComponent* AbilitySystemComponent;
 };
 
