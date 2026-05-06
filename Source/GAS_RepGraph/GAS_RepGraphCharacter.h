@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GASAbilitySystemComponent.h"
+#include "GAS/GASAbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "GAS_RepGraphCharacter.generated.h"
@@ -16,6 +16,15 @@ class UInputMappingContext;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+
+// EGASAbility input ID
+UENUM(BlueprintType)
+enum class EGASAbilityInputID : uint8
+{
+	None UMETA(DisplayName = "None"),
+	Confirm UMETA(DisplayName = "Confirm"),
+	Cancel UMETA(DisplayName = "Cancel")
+};
 
 UCLASS(config=Game)
 class AGAS_RepGraphCharacter : public ACharacter
@@ -87,5 +96,8 @@ public:
 	// Ability System
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Abilities")
 	UGASAbilitySystemComponent* AbilitySystemComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;
 };
 
