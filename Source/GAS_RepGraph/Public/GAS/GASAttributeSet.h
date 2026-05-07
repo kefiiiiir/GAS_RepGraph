@@ -6,6 +6,8 @@
 #include "AttributeSet.h"
 #include "GASAttributeSet.generated.h"
 
+
+
 /**
  * 
  */
@@ -13,5 +15,7 @@ UCLASS()
 class GAS_REPGRAPH_API UGASAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
+	
+public:
 	
 };

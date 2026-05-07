@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GAS/GASAbilitySystemComponent.h"
+#include "GAS/GASAttributeSet.h"
 #include "Logging/LogMacros.h"
 #include "GAS_RepGraphCharacter.generated.h"
 
@@ -52,7 +54,11 @@ class AGAS_RepGraphCharacter : public ACharacter
 	
 public:
 	AGAS_RepGraphCharacter();
+	
+	virtual void PossessedBy(AController* NewController) override;
 
+	virtual void OnRep_PlayerState();
+	
 protected:
 	virtual void BeginPlay();
 
@@ -85,6 +91,16 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
+	
+private:
+	
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UGASAbilitySystemComponent> GASAbilitySystemComp;
+	
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UGASAttributeSet> GASAttributeSet;
+	
+	void InitAbilityActorInfo();
 
 public:
 	/** Returns Mesh1P subobject **/

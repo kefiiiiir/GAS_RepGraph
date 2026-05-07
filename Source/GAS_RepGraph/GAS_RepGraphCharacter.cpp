@@ -1,15 +1,17 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GAS_RepGraphCharacter.h"
-#include "GAS_RepGraphProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GASPlayerState.h"
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
+#include "GAS/GASAbilitySystemComponent.h"
+#include "Iris/Core/IrisDebugging.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -38,6 +40,37 @@ AGAS_RepGraphCharacter::AGAS_RepGraphCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+}
+
+void AGAS_RepGraphCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	
+	if (HasAuthority())
+	{
+		InitAbilityActorInfo();
+	}
+}
+
+void AGAS_RepGraphCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	
+	InitAbilityActorInfo();
+}
+
+void AGAS_RepGraphCharacter::InitAbilityActorInfo()
+{
+	if (AGASPlayerState* GASPlayerState = GetPlayerState<AGASPlayerState>())
+	{
+		GASAbilitySystemComp = GASPlayerState->GetGASAbilitySystemComponent();
+		GASAttributeSet = GASPlayerState->GetAttributeSet();
+		
+		if (IsValid(GASAbilitySystemComp))
+		{
+			GASAbilitySystemComp->InitAbilityActorInfo(GASPlayerState, this);
+		}
+	}
 }
 
 void AGAS_RepGraphCharacter::BeginPlay()
