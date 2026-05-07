@@ -10,7 +10,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
-#include "GAS/Abilities/GASJumpAbility.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -39,10 +38,6 @@ AGAS_RepGraphCharacter::AGAS_RepGraphCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-	
-	// Ability system component init
-	AbilitySystemComponent = CreateDefaultSubobject<UGASAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-
 }
 
 void AGAS_RepGraphCharacter::BeginPlay()
@@ -56,19 +51,6 @@ void AGAS_RepGraphCharacter::BeginPlay()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		}
-	}
-	
-	// Ability system is valid check
-	if (AbilitySystemComponent)
-	{
-		// grant each ability
-		for (TSubclassOf<UGameplayAbility>& Ability : DefaultAbilities)
-		{
-			if (Ability)
-			{
-				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Ability, 1, static_cast<int32>(EGASAbilityInputID::Confirm), this));
-			}
 		}
 	}
 
@@ -90,18 +72,6 @@ void AGAS_RepGraphCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGAS_RepGraphCharacter::Look);
-		
-		// Ability system is valid check
-		if (AbilitySystemComponent && PlayerInputComponent)
-		{
-			AbilitySystemComponent->BindAbilityActivationToInputComponent(PlayerInputComponent, FGameplayAbilityInputBinds(
-				"Confirm",
-				"Cancel",
-				"EGASAbilityInputID",
-				static_cast<int32>(EGASAbilityInputID::Confirm),
-				static_cast<int32>(EGASAbilityInputID::Cancel)
-			));
-		}
 	}
 	else
 	{
