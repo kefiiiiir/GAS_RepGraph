@@ -18,15 +18,6 @@ struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
-// EGASAbility input ID
-UENUM(BlueprintType)
-enum class EGASAbilityInputID : uint8
-{
-	None UMETA(DisplayName = "None"),
-	Confirm UMETA(DisplayName = "Confirm"),
-	Cancel UMETA(DisplayName = "Cancel")
-};
-
 UCLASS(config=Game)
 class AGAS_RepGraphCharacter : public ACharacter
 {
@@ -55,8 +46,27 @@ class AGAS_RepGraphCharacter : public ACharacter
 public:
 	AGAS_RepGraphCharacter();
 	
+	/**
+
+	* Вызывается на сервере, когда персонаж запоссесывается.
+
+	* Инициализация информации об акторе GAS происходит здесь на стороне authority,
+
+	* потому что гарантируется существование PlayerState и Controller.
+
+	*/
+	
 	virtual void PossessedBy(AController* NewController) override;
 
+	/**
+
+	* Вызывается на клиентах после завершения репликации PlayerState.
+
+	* Информация об акторе GAS также должна быть инициализирована на стороне клиента, поскольку
+	* реплицированные ссылки на PlayerState недоступны сразу во время создания персонажа.
+
+	*/
+	
 	virtual void OnRep_PlayerState();
 	
 protected:
@@ -93,10 +103,27 @@ protected:
 	// End of APawn interface
 	
 private:
-	
+	/**
+	* Кэшированная ссылка на компонент системы способностей игрока.
+	* 
+	* Извлекается из состояния игрока во время инициализации GAS.
+
+	* ПРИМЕЧАНИЕ:
+
+	* Компонент системы способностей намеренно принадлежит состоянию игрока, чтобы обеспечить
+	* сохранение состояния при возрождении и замене персонажей.
+
+	*/
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UGASAbilitySystemComponent> GASAbilitySystemComp;
 	
+	/**
+
+	* Кэшированная ссылка на набор атрибутов игрока.
+
+	* Содержит реплицированные игровые атрибуты, управляемые GAS.
+
+	*/
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UGASAttributeSet> GASAttributeSet;
 	

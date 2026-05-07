@@ -46,6 +46,7 @@ void AGAS_RepGraphCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	
+	// Информация об акторе GAS должна быть инициализирована на сервере после запоссесивания
 	if (HasAuthority())
 	{
 		InitAbilityActorInfo();
@@ -56,6 +57,7 @@ void AGAS_RepGraphCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	
+	// Клиенты инициализируют информацию об акторе GAS после завершения репликации PlayerState.
 	InitAbilityActorInfo();
 }
 
@@ -63,11 +65,13 @@ void AGAS_RepGraphCharacter::InitAbilityActorInfo()
 {
 	if (AGASPlayerState* GASPlayerState = GetPlayerState<AGASPlayerState>())
 	{
+		// Получение референса на GAS из постоянно хранимого состояния игрока.
 		GASAbilitySystemComp = GASPlayerState->GetGASAbilitySystemComponent();
 		GASAttributeSet = GASPlayerState->GetAttributeSet();
 		
 		if (IsValid(GASAbilitySystemComp))
 		{
+			// Привзяка OwnerActor (PlayerState) к AvatarActor (Character).
 			GASAbilitySystemComp->InitAbilityActorInfo(GASPlayerState, this);
 		}
 	}
