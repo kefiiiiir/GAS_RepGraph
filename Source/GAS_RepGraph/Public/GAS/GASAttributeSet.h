@@ -34,6 +34,14 @@ public:
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxHealth);
 	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Mana)
+	FGameplayAttributeData Mana;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, Mana);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_MaxMana)
+	FGameplayAttributeData MaxMana;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxMana);
+	
 private:
 	
 	UFUNCTION()
@@ -41,5 +49,11 @@ private:
 	
 	UFUNCTION()
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
+	
+	UFUNCTION()
+	void OnRep_Mana(const FGameplayAttributeData& OldMana);
+	
+	UFUNCTION()
+	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana);
 	
 };
