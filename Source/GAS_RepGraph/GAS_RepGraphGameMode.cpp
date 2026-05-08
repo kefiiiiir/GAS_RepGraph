@@ -12,3 +12,9 @@ AGAS_RepGraphGameMode::AGAS_RepGraphGameMode()
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 }
+
+UCharacterClassInfo* AGAS_RepGraphGameMode::GetCharacterClassDefaultInfo() const
+{
+	return ClassDefaults;
+}
+
