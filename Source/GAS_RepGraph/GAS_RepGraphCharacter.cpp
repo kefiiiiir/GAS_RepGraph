@@ -173,12 +173,6 @@ void AGAS_RepGraphCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGAS_RepGraphCharacter::Look);
-
-		// Ability trigger by gameplay tag
-		if (IsValid(AbilityAction))
-		{
-			EnhancedInputComponent->BindAction(AbilityAction, ETriggerEvent::Started, this, &AGAS_RepGraphCharacter::ActivateTaggedAbility);
-		}
 	}
 	else
 	{
