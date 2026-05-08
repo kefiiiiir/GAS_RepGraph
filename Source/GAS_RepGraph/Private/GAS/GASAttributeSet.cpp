@@ -29,6 +29,11 @@ void UGASAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMod
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
+	
+	if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
+	{
+		SetStamina(FMath::Clamp(GetStamina(), 0.f, GetMaxStamina()));
+	}
 }
 
 void UGASAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
@@ -49,4 +54,14 @@ void UGASAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana)
 void UGASAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSet, Mana, OldMaxMana);
+}
+
+void UGASAttributeSet::OnRep_Stamina(const FGameplayAttributeData& OldStamina)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSet, Stamina, OldStamina);
+}
+
+void UGASAttributeSet::OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UGASAttributeSet, MaxStamina, OldMaxStamina);
 }

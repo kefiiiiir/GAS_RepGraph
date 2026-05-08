@@ -31,7 +31,7 @@ private:
 	UPROPERTY(VisibleAnywhere, meta=(AllowPrivateAccess = true))
 	TObjectPtr<UBoxComponent> OverlapBox;
 	
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category="Custom Values | Effects")
+	UPROPERTY(EditAnywhere, Category="Custom Values | Effects")
 	TSubclassOf<UGameplayEffect> Effect;
 };
 

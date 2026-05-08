@@ -42,6 +42,14 @@ public:
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxMana);
 	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Stamina)
+	FGameplayAttributeData Stamina;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, Stamina);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Stamina)
+	FGameplayAttributeData MaxStamina;
+	ATTRIBUTE_ACCESSORS(UGASAttributeSet, MaxStamina);
+	
 private:
 	
 	UFUNCTION()
@@ -55,5 +63,11 @@ private:
 	
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana);
+	
+	UFUNCTION()
+	void OnRep_Stamina(const FGameplayAttributeData& OldStamina);
+	
+	UFUNCTION()
+	void OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina);
 	
 };

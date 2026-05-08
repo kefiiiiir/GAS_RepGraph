@@ -73,10 +73,10 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnHealthChanged(float CurrentHealth, float MaxHealth);
+	void OnHealthChanged(float CurrentHealth, float MaxHealth, float OldHealth);
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnManaChanged(float CurrentMana, float MaxMana);
+	void OnManaChanged(float CurrentMana, float MaxMana, float OldMana);
 	
 protected:
 	virtual void BeginPlay();

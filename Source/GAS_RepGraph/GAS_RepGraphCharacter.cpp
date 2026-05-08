@@ -121,13 +121,13 @@ void AGAS_RepGraphCharacter::BindCallbacksToDependencies()
 		GASAbilitySystemComp->GetGameplayAttributeValueChangeDelegate(GASAttributeSet->GetHealthAttribute()).AddLambda(
 			[this] (const FOnAttributeChangeData& Data)
 			{
-				OnHealthChanged(Data.NewValue, GASAttributeSet->GetMaxHealth());
+				OnHealthChanged(Data.NewValue, GASAttributeSet->GetMaxHealth(), Data.OldValue);
 			});
 		
 		GASAbilitySystemComp->GetGameplayAttributeValueChangeDelegate(GASAttributeSet->GetManaAttribute()).AddLambda(
 			[this] (const FOnAttributeChangeData& Data)
 			{
-				OnManaChanged(Data.NewValue, GASAttributeSet->GetMaxMana());
+				OnManaChanged(Data.NewValue, GASAttributeSet->GetMaxMana(), Data.OldValue);
 			});
 	}
 }
@@ -136,8 +136,8 @@ void AGAS_RepGraphCharacter::BroadcastInitialValues()
 {
 	if (IsValid(GASAttributeSet))
 	{
-		OnHealthChanged(GASAttributeSet->GetHealth(), GASAttributeSet->GetMaxHealth());
-		OnManaChanged(GASAttributeSet->GetMana(), GASAttributeSet->GetMaxMana());
+		OnHealthChanged(GASAttributeSet->GetHealth(), GASAttributeSet->GetMaxHealth(), 0.f);
+		OnManaChanged(GASAttributeSet->GetMana(), GASAttributeSet->GetMaxMana(), 0.f);
 	}
 }
 
