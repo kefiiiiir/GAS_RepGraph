@@ -127,7 +127,17 @@ private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UGASAttributeSet> GASAttributeSet;
 	
+	/**
+	* Идентификатор класса игрового процесса, используемый для настройки на основе данных.
+	*/
+	UPROPERTY(EditAnywhere, Category="Custom Values | Character Info")
+	FGameplayTag CharacterTag;
+	
+	/** Инициализирует связь владельца GAS с аватаром */
 	void InitAbilityActorInfo();
+	
+	/** Применяет атрибуты и способности по умолчанию, основанные на классе */
+	void InitClassDefaults();
 
 public:
 	/** Returns Mesh1P subobject **/
