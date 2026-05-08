@@ -74,26 +74,34 @@ void AGAS_RepGraphCharacter::InitAbilityActorInfo()
 		{
 			// Привзяка OwnerActor (PlayerState) к AvatarActor (Character).
 			GASAbilitySystemComp->InitAbilityActorInfo(GASPlayerState, this);
+			
+			if (HasAuthority())
+			{
+				InitClassDefaults();
+			}
 		}
 	}
 }
 
+// Инициализация параметров по умолчанию
 void AGAS_RepGraphCharacter::InitClassDefaults()
 {
-	// Перед поиском проверяем тег класса.
 	if (!CharacterTag.IsValid())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No character tag selected in this character %s"), *GetNameSafe(this));
 	}
 	
-	// Получение данных класса из глобальной библиотеки.
 	else if (UCharacterClassInfo* ClassInfo = UGASAbilitySystemLibrary::GetCharacterClassDefaultInfo(this))
 	{
-		
-		// Найти конфигурацию для этого класса символов.
 		if (const FCharacterClassDefaultInfo* SelectedClassInfo = ClassInfo->ClassDefaultInfoMap.Find(CharacterTag))
 		{
-			
+			// Добавление способностей к персонажу
+			if (IsValid(GASAbilitySystemComp))
+			{
+				GASAbilitySystemComp->AddCharacterAbilities(SelectedClassInfo->StartingAbilities);
+				GASAbilitySystemComp->AddCharacterPassiveAbilities(SelectedClassInfo->StartingPassives);
+				GASAbilitySystemComp->InitializeDefaultAttributes(SelectedClassInfo->DefaultAttributes);
+			}
 		}
 	}
 }
