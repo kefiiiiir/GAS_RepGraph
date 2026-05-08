@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/Character.h"
 #include "GAS/GASAbilitySystemComponent.h"
 #include "GAS/GASAttributeSet.h"
@@ -43,6 +44,10 @@ class AGAS_RepGraphCharacter : public ACharacter, public IAbilitySystemInterface
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+
+	/** Ability trigger input action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* AbilityAction;
 	
 public:
 	AGAS_RepGraphCharacter();
@@ -106,6 +111,9 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
+	/** Activates an ability that contains AbilityTriggerTag. */
+	void ActivateTaggedAbility(const FInputActionValue& Value);
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
@@ -141,6 +149,10 @@ private:
 	*/
 	UPROPERTY(EditAnywhere, Category="Custom Values | Character Info")
 	FGameplayTag CharacterTag;
+
+	/** Ability tag used when AbilityAction is pressed. */
+	UPROPERTY(EditAnywhere, Category="Custom Values | Abilities")
+	FGameplayTag AbilityTriggerTag;
 	
 	/** Инициализирует связь владельца GAS с аватаром */
 	void InitAbilityActorInfo();

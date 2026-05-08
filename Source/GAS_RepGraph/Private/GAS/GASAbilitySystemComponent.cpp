@@ -44,3 +44,27 @@ void UGASAbilitySystemComponent::InitializeDefaultAttributes(const TSubclassOf<U
 	ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
 
+bool UGASAbilitySystemComponent::TryActivateAbilityByTag(const FGameplayTag& AbilityTag)
+{
+	if (!AbilityTag.IsValid())
+	{
+		return false;
+	}
+
+	FGameplayTagContainer AbilityTagContainer;
+	AbilityTagContainer.AddTag(AbilityTag);
+
+	TArray<FGameplayAbilitySpec*> MatchingSpecs;
+	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagContainer, MatchingSpecs, false);
+
+	for (const FGameplayAbilitySpec* AbilitySpec : MatchingSpecs)
+	{
+		if (AbilitySpec && TryActivateAbility(AbilitySpec->Handle))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+

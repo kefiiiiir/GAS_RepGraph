@@ -173,6 +173,12 @@ void AGAS_RepGraphCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGAS_RepGraphCharacter::Look);
+
+		// Ability trigger by gameplay tag
+		if (IsValid(AbilityAction))
+		{
+			EnhancedInputComponent->BindAction(AbilityAction, ETriggerEvent::Started, this, &AGAS_RepGraphCharacter::ActivateTaggedAbility);
+		}
 	}
 	else
 	{
@@ -204,6 +210,28 @@ void AGAS_RepGraphCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void AGAS_RepGraphCharacter::ActivateTaggedAbility(const FInputActionValue& Value)
+{
+	(void)Value;
+
+	if (!AbilityTriggerTag.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AbilityTriggerTag is not set on character %s"), *GetNameSafe(this));
+		return;
+	}
+
+	if (!IsValid(GASAbilitySystemComp))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GASAbilitySystemComp is invalid on character %s"), *GetNameSafe(this));
+		return;
+	}
+
+	if (!GASAbilitySystemComp->TryActivateAbilityByTag(AbilityTriggerTag))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No activatable ability found for tag %s"), *AbilityTriggerTag.ToString());
 	}
 }
 

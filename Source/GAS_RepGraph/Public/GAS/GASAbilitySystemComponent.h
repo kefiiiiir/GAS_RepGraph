@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayTagContainer.h"
 #include "GASAbilitySystemComponent.generated.h"
 
 /**
@@ -55,6 +56,10 @@ public:
 	* - Броня
 	*/
 	void InitializeDefaultAttributes(const TSubclassOf<UGameplayEffect>& AttributeEffect);
+
+	/** Activates the first granted ability that contains the provided ability tag. */
+	UFUNCTION(BlueprintCallable, Category="Abilities")
+	bool TryActivateAbilityByTag(const FGameplayTag& AbilityTag);
 	
 };
 
