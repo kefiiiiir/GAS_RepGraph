@@ -69,6 +69,12 @@ public:
 	
 	virtual void OnRep_PlayerState();
 	
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnHealthChanged(float CurrentHealth, float MaxHealth);
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnManaChanged(float CurrentMana, float MaxMana);
+	
 protected:
 	virtual void BeginPlay();
 
@@ -138,6 +144,9 @@ private:
 	
 	/** Применяет атрибуты и способности по умолчанию, основанные на классе */
 	void InitClassDefaults();
+	
+	void BindCallbacksToDependencies();
+	void BroadcastInitialValues();
 
 public:
 	/** Returns Mesh1P subobject **/

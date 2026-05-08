@@ -106,6 +106,31 @@ void AGAS_RepGraphCharacter::InitClassDefaults()
 	}
 }
 
+void AGAS_RepGraphCharacter::BindCallbacksToDependencies()
+{
+	// Привязка ивентов к изменению атрибутов
+	if (IsValid(GASAbilitySystemComp) && IsValid(GASAttributeSet))
+	{
+		GASAbilitySystemComp->GetGameplayAttributeValueChangeDelegate(GASAttributeSet->GetHealthAttribute()).AddLambda(
+			[this] (const FOnAttributeChangeData& Data)
+			{
+				OnHealthChanged(Data.NewValue, GASAttributeSet->GetMaxHealth());
+			});
+		
+		GASAbilitySystemComp->GetGameplayAttributeValueChangeDelegate(GASAttributeSet->GetManaAttribute()).AddLambda(
+			[this] (const FOnAttributeChangeData& Data)
+			{
+				OnManaChanged(Data.NewValue, GASAttributeSet->GetMaxMana());
+			});
+	}
+	
+}
+
+void AGAS_RepGraphCharacter::BroadcastInitialValues()
+{
+	
+}
+
 void AGAS_RepGraphCharacter::BeginPlay()
 {
 	// Call the base class  
