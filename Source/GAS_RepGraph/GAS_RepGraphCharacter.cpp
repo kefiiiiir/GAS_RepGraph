@@ -75,6 +75,8 @@ void AGAS_RepGraphCharacter::InitAbilityActorInfo()
 			// Привзяка OwnerActor (PlayerState) к AvatarActor (Character).
 			GASAbilitySystemComp->InitAbilityActorInfo(GASPlayerState, this);
 			
+			BindCallbacksToDependencies();
+			
 			if (HasAuthority())
 			{
 				InitClassDefaults();
@@ -123,12 +125,15 @@ void AGAS_RepGraphCharacter::BindCallbacksToDependencies()
 				OnManaChanged(Data.NewValue, GASAttributeSet->GetMaxMana());
 			});
 	}
-	
 }
 
 void AGAS_RepGraphCharacter::BroadcastInitialValues()
 {
-	
+	if (IsValid(GASAttributeSet))
+	{
+		OnHealthChanged(GASAttributeSet->GetHealth(), GASAttributeSet->GetMaxHealth());
+		OnManaChanged(GASAttributeSet->GetMana(), GASAttributeSet->GetMaxMana());
+	}
 }
 
 void AGAS_RepGraphCharacter::BeginPlay()

@@ -146,6 +146,8 @@ private:
 	void InitClassDefaults();
 	
 	void BindCallbacksToDependencies();
+	
+	UFUNCTION(BlueprintCallable)
 	void BroadcastInitialValues();
 
 public:
