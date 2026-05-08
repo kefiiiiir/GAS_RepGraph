@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "GAS/GASAbilitySystemComponent.h"
 #include "GAS/GASAttributeSet.h"
@@ -19,7 +20,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class AGAS_RepGraphCharacter : public ACharacter
+class AGAS_RepGraphCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -68,6 +69,8 @@ public:
 	*/
 	
 	virtual void OnRep_PlayerState();
+	
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnHealthChanged(float CurrentHealth, float MaxHealth);

@@ -62,6 +62,11 @@ void AGAS_RepGraphCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+UAbilitySystemComponent* AGAS_RepGraphCharacter::GetAbilitySystemComponent() const
+{
+	return GASAbilitySystemComp;
+}
+
 void AGAS_RepGraphCharacter::InitAbilityActorInfo()
 {
 	if (AGASPlayerState* GASPlayerState = GetPlayerState<AGASPlayerState>())
