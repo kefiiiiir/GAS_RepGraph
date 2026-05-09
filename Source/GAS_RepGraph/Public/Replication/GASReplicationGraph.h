@@ -59,3 +59,4 @@ private:
 	
 	uint8 bCubeRelevant;
 };
+

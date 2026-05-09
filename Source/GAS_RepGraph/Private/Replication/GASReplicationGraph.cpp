@@ -20,6 +20,8 @@ void UGASReplicationGraph::InitGlobalGraphNodes()
 	
 	// Добавляем ее в глобальный скоуп
 	AddGlobalGraphNode(AlwaysRelevantNode);
+	
+	UE_LOG(LogTemp, Warning, TEXT(">>> GAS REPLICATION GRAPH ACTIVE <<<"));
 }
 
 void UGASReplicationGraph::RouteAddNetworkActorToNodes(const FNewReplicatedActorInfo& ActorInfo,
@@ -32,9 +34,18 @@ void UGASReplicationGraph::RouteAddNetworkActorToNodes(const FNewReplicatedActor
 		AlwaysRelevantNode->NotifyAddNetworkActor(ActorInfo);
 	}
 	
-	if (UGASReplicationGraphConnection* RepGraphConnection = GetConnectionForActor(ActorInfo.Actor); ActorInfo.Actor->bOnlyRelevantToOwner)
+	if (ActorInfo.Actor)
 	{
-		RepGraphConnection->AlwaysRelevantForConnectionNode->NotifyAddNetworkActor(ActorInfo);
+		if (ActorInfo.Actor->bOnlyRelevantToOwner)
+		{
+			if (UGASReplicationGraphConnection* RepGraphConnection = GetConnectionForActor(ActorInfo.Actor))
+			{
+				if (RepGraphConnection->AlwaysRelevantForConnectionNode)
+				{
+					RepGraphConnection->AlwaysRelevantForConnectionNode->NotifyAddNetworkActor(ActorInfo);
+				}
+			}
+		}
 	}
 }
 
