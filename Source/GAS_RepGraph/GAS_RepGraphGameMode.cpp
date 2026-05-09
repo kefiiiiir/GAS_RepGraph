@@ -1,7 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "GAS_RepGraphGameMode.h"
-#include "GAS_RepGraphCharacter.h"
+#include "Replication/GASReplicationGraph.h"
+#include "ReplicationGraph.h"
 #include "UObject/ConstructorHelpers.h"
 
 AGAS_RepGraphGameMode::AGAS_RepGraphGameMode()

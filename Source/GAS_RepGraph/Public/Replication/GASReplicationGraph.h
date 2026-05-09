@@ -34,6 +34,15 @@ public:
 	
 	void HandlePendingActors();
 	
+	void HandlePendingPlayerControllers();
+	
+	void AddPlayerController(const APlayerController* NewPlayerController);
+	
+	const TArray<UGASReplicationGraphConnection*, TInlineAllocator<16>>& GetPlayerConnections() const
+	{
+		return PlayerConnections;
+	}
+	
 protected:
 	
 	virtual void InitGlobalGraphNodes() override;
@@ -53,14 +62,27 @@ private:
 	
 	TArray<AActor*, TInlineAllocator<16>> PendingActors;
 	
+	TArray<const APlayerController*, TInlineAllocator<16>> PlayerControllers;
+	
+	TArray<UGASReplicationGraphConnection*, TInlineAllocator<16>> PlayerConnections;
+	
 };
 
 UCLASS()
-class GAS_REPGRAPH_API UReplicationGraphNode_CubeRelevancy : public UReplicationGraphNode_ActorList
+class GAS_REPGRAPH_API UReplicationGraphNode_ConnectionActors : public UReplicationGraphNode_ActorList
 {
 	GENERATED_BODY()
 	
+public:
+	UReplicationGraphNode_ConnectionActors();
 	
+protected:
+	
+	virtual void GatherActorListsForConnection(const FConnectionGatherActorListParameters& Params) override;
+	
+	void GatherActorListsForConnectionDefault(const FConnectionGatherActorListParameters& Params);
+	
+	virtual void PrepareForReplication() override;
 };
 
 UCLASS()
@@ -70,16 +92,23 @@ class GAS_REPGRAPH_API UGASReplicationGraphConnection : public UNetReplicationGr
 	
 	friend UGASReplicationGraph;
 	
+public:
+	
+	UReplicationGraphNode_ConnectionActors* GetConnectionActorListNode()
+	{
+		return ActorListNode;
+	}
+	
 private:
 	
 	UPROPERTY()
-	UReplicationGraphNode_CubeRelevancy* CubeRelevancyNode;
+	UReplicationGraphNode_ConnectionActors* CubeRelevancyNode;
 	
 	UPROPERTY()
 	UReplicationGraphNode_AlwaysRelevant_ForConnection* AlwaysRelevantForConnectionNode;
 	
 	UPROPERTY()
-	UReplicationGraphNode_ActorList* ActorListNode;
+	UReplicationGraphNode_ConnectionActors* ActorListNode;
 	
 	uint8 bCubeRelevant;
 };
