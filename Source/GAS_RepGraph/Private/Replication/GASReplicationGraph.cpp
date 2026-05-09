@@ -31,21 +31,12 @@ void UGASReplicationGraph::RouteAddNetworkActorToNodes(const FNewReplicatedActor
 	
 	if (ActorInfo.Class->IsChildOf(AGameStateBase::StaticClass()) || ActorInfo.Class->IsChildOf(APlayerState::StaticClass()))
 	{
-		AlwaysRelevantNode->NotifyAddNetworkActor(ActorInfo);
+		AlwaysRelevantNode->AddAlwaysRelevantClass(ActorInfo.Class);
 	}
 	
-	if (ActorInfo.Actor)
+	if (UGASReplicationGraphConnection* Connection = GetConnectionForActor(ActorInfo.Actor); ActorInfo.Actor->bOnlyRelevantToOwner && Connection)
 	{
-		if (ActorInfo.Actor->bOnlyRelevantToOwner)
-		{
-			if (UGASReplicationGraphConnection* RepGraphConnection = GetConnectionForActor(ActorInfo.Actor))
-			{
-				if (RepGraphConnection->AlwaysRelevantForConnectionNode)
-				{
-					RepGraphConnection->AlwaysRelevantForConnectionNode->NotifyAddNetworkActor(ActorInfo);
-				}
-			}
-		}
+		Connection->AlwaysRelevantForConnectionNode->NotifyAddNetworkActor(ActorInfo);
 	}
 }
 
