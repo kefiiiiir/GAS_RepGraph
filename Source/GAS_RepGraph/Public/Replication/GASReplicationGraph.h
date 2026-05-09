@@ -32,6 +32,7 @@ private:
 	
 private:
 	
+	UPROPERTY()
 	UReplicationGraphNode_AlwaysRelevant* AlwaysRelevantNode;
 	
 };
