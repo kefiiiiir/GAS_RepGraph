@@ -25,27 +25,27 @@ class AGAS_RepGraphCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
-	/** Pawn mesh: 1st person view (arms; seen only by self) */
+	/** Меш рук для вида от первого лица (виден только владельцу) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	USkeletalMeshComponent* Mesh1P;
 
-	/** First person camera */
+	/** Камера от первого лица */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
-	/** MappingContext */
+	/** Контекст сопоставления ввода */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
 
-	/** Jump Input Action */
+	/** Действие ввода прыжка */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* JumpAction;
 
-	/** Move Input Action */
+	/** Действие ввода движения */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
 
-	/** Ability trigger input action */
+	/** Действие ввода для активации способности */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* AbilityAction;
 	
@@ -88,36 +88,36 @@ protected:
 
 public:
 		
-	/** Look Input Action */
+	/** Действие ввода обзора */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
-	/** Bool for AnimBP to switch to another animation set */
+	/** Флаг для AnimBP: переключение на другой набор анимаций */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Weapon)
 	bool bHasRifle;
 
-	/** Setter to set the bool */
+	/** Сеттер для флага оружия */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	void SetHasRifle(bool bNewHasRifle);
 
-	/** Getter for the bool */
+	/** Геттер флага оружия */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
 
 protected:
-	/** Called for movement input */
+	/** Обработчик ввода движения */
 	void Move(const FInputActionValue& Value);
 
-	/** Called for looking input */
+	/** Обработчик ввода обзора */
 	void Look(const FInputActionValue& Value);
 
-	/** Activates an ability that contains AbilityTriggerTag. */
+	/** Активирует способность, содержащую `AbilityTriggerTag`. */
 	void ActivateTaggedAbility(const FInputActionValue& Value);
 
 protected:
-	// APawn interface
+	// Интерфейс APawn
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
-	// End of APawn interface
+	// Конец интерфейса APawn
 	
 private:
 	/**
@@ -150,7 +150,7 @@ private:
 	UPROPERTY(EditAnywhere, Category="Custom Values | Character Info")
 	FGameplayTag CharacterTag;
 
-	/** Ability tag used when AbilityAction is pressed. */
+	/** Тег способности, используемый при нажатии `AbilityAction`. */
 	UPROPERTY(EditAnywhere, Category="Custom Values | Abilities")
 	FGameplayTag AbilityTriggerTag;
 	
@@ -166,9 +166,9 @@ private:
 	void BroadcastInitialValues();
 
 public:
-	/** Returns Mesh1P subobject **/
+	/** Возвращает подобъект `Mesh1P` **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
-	/** Returns FirstPersonCameraComponent subobject **/
+	/** Возвращает подобъект `FirstPersonCameraComponent` **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 };
 

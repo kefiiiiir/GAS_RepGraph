@@ -9,10 +9,10 @@ void AGAS_RepGraphPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// get the enhanced input subsystem
+	// Получаем подсистему Enhanced Input.
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
-		// add the mapping context so we get controls
+		// Добавляем контекст сопоставления, чтобы включить управление.
 		Subsystem->AddMappingContext(InputMappingContext, 0);
 
 		UE_LOG(LogTemp, Warning, TEXT("BeginPlay"));
@@ -20,6 +20,7 @@ void AGAS_RepGraphPlayerController::BeginPlay()
 	
 	if (UNetDriver* NetDriver = GetWorld()->GetNetDriver())
 	{
+		// Регистрируем контроллер в графе репликации после инициализации сети.
 		if (UGASReplicationGraph*  ReplicationGraph = NetDriver->GetReplicationDriver<UGASReplicationGraph>())
 		{
 			ReplicationGraph->AddPlayerController(this);

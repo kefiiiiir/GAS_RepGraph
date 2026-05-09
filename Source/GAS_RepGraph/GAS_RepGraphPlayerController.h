@@ -8,9 +8,7 @@
 
 class UInputMappingContext;
 
-/**
- *
- */
+/** Контроллер игрока, который настраивает локальный ввод при старте. */
 UCLASS()
 class GAS_REPGRAPH_API AGAS_RepGraphPlayerController : public APlayerController
 {
@@ -18,14 +16,14 @@ class GAS_REPGRAPH_API AGAS_RepGraphPlayerController : public APlayerController
 	
 protected:
 
-	/** Input Mapping Context to be used for player input */
+	/** Контекст ввода, применяемый для управления игроком */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputMappingContext* InputMappingContext;
 
-	// Begin Actor interface
+	// Начало интерфейса Actor
 protected:
 
 	virtual void BeginPlay() override;
 
-	// End Actor interface
+	// Конец интерфейса Actor
 };

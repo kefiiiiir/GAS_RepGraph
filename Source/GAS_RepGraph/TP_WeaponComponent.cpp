@@ -10,10 +10,10 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
-// Sets default values for this component's properties
+// Устанавливает значения по умолчанию для свойств компонента.
 UTP_WeaponComponent::UTP_WeaponComponent()
 {
-	// Default offset from the character location for projectiles to spawn
+	// Базовое смещение точки появления снаряда относительно персонажа.
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
@@ -25,7 +25,7 @@ void UTP_WeaponComponent::Fire()
 		return;
 	}
 
-	// Try and fire a projectile
+	// Пытаемся выпустить снаряд.
 	if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
@@ -33,28 +33,28 @@ void UTP_WeaponComponent::Fire()
 		{
 			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
 			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+			// `MuzzleOffset` задан в пространстве камеры; переводим его в мировые координаты.
 			const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
 	
-			//Set Spawn Collision Handling Override
+			// Настраиваем поведение при коллизии в момент спавна.
 			FActorSpawnParameters ActorSpawnParams;
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	
-			// Spawn the projectile at the muzzle
+			// Спавним снаряд в точке дула.
 			World->SpawnActor<AGAS_RepGraphProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 		}
 	}
 	
-	// Try and play the sound if specified
+	// Проигрываем звук выстрела, если он задан.
 	if (FireSound != nullptr)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
 	}
 	
-	// Try and play a firing animation if specified
+	// Проигрываем анимацию выстрела, если она задана.
 	if (FireAnimation != nullptr)
 	{
-		// Get the animation object for the arms mesh
+		// Получаем инстанс анимации для меша рук.
 		UAnimInstance* AnimInstance = Character->GetMesh1P()->GetAnimInstance();
 		if (AnimInstance != nullptr)
 		{
@@ -67,31 +67,31 @@ void UTP_WeaponComponent::AttachWeapon(AGAS_RepGraphCharacter* TargetCharacter)
 {
 	Character = TargetCharacter;
 
-	// Check that the character is valid, and has no rifle yet
+	// Проверяем валидность персонажа и отсутствие уже прикрепленной винтовки.
 	if (Character == nullptr || Character->GetHasRifle())
 	{
 		return;
 	}
 
-	// Attach the weapon to the First Person Character
+	// Прикрепляем оружие к персонажу от первого лица.
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 	AttachToComponent(Character->GetMesh1P(), AttachmentRules, FName(TEXT("GripPoint")));
 	
-	// switch bHasRifle so the animation blueprint can switch to another animation set
+	// Переключаем флаг, чтобы AnimBP сменил набор анимаций.
 	Character->SetHasRifle(true);
 
-	// Set up action bindings
+	// Настраиваем бинды действий ввода.
 	if (APlayerController* PlayerController = Cast<APlayerController>(Character->GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			// Set the priority of the mapping to 1, so that it overrides the Jump action with the Fire action when using touch input
+			// Приоритет 1 нужен, чтобы действие огня перекрывало прыжок на тач-вводе.
 			Subsystem->AddMappingContext(FireMappingContext, 1);
 		}
 
 		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
 		{
-			// Fire
+			// Бинд действия стрельбы.
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
 		}
 	}

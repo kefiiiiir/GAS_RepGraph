@@ -8,7 +8,7 @@
 AGAS_RepGraphGameMode::AGAS_RepGraphGameMode()
 	: Super()
 {
-	// set default pawn class to our Blueprinted character
+	// Назначаем класс персонажа по умолчанию из Blueprint.
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPerson/Blueprints/BP_FirstPersonCharacter"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 

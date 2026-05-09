@@ -8,10 +8,10 @@
 #include "AbilitySystemGlobals.h"
 #include "Libraries/GASAbilitySystemLibrary.h"
 
-// Sets default values
+// Устанавливает значения по умолчанию.
 AEffectActor::AEffectActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Tick отключен, так как логика работает через оверлап и события.
 	PrimaryActorTick.bCanEverTick = false;
 	
 	bReplicates = true;
@@ -26,7 +26,7 @@ AEffectActor::AEffectActor()
 	
 }
 
-// Called when the game starts or when spawned
+// Вызывается при старте игры или при спавне.
 void AEffectActor::BeginPlay()
 {
 	Super::BeginPlay();

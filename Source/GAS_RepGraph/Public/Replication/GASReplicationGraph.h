@@ -6,9 +6,7 @@
 #include "ReplicationGraph.h"
 #include "GASReplicationGraph.generated.h"
 
-/**
- * 
- */
+/** Пользовательская реализация Replication Graph для проекта GAS_RepGraph. */
 
 UCLASS()
 class UReplicationGraphNode_AlwaysRelevant_WithPending : public UReplicationGraphNode_AlwaysRelevant

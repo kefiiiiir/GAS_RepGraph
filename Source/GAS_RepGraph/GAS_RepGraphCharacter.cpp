@@ -21,19 +21,19 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AGAS_RepGraphCharacter::AGAS_RepGraphCharacter()
 {
-	// Character doesnt have a rifle at start
+	// В начале у персонажа нет винтовки.
 	bHasRifle = false;
 	
-	// Set size for collision capsule
+	// Настраиваем размер капсулы коллизии.
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 		
-	// Create a CameraComponent	
+	// Создаем компонент камеры.
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
-	FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f)); // Position the camera
+	FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f)); // Позиция камеры относительно капсулы.
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
-	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
+	// Создаем меш рук для вида от первого лица (виден только владельцу).
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
@@ -143,10 +143,10 @@ void AGAS_RepGraphCharacter::BroadcastInitialValues()
 
 void AGAS_RepGraphCharacter::BeginPlay()
 {
-	// Call the base class  
+	// Вызываем базовую реализацию.
 	Super::BeginPlay();
 
-	// Add Input Mapping Context
+	// Добавляем базовый контекст ввода.
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -161,17 +161,17 @@ void AGAS_RepGraphCharacter::BeginPlay()
 
 void AGAS_RepGraphCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	// Set up action bindings
+	// Настраиваем бинды действий.
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		// Jumping
+		// Прыжок.
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
-		// Moving
+		// Передвижение.
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AGAS_RepGraphCharacter::Move);
 
-		// Looking
+		// Взгляд (камера).
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGAS_RepGraphCharacter::Look);
 	}
 	else
@@ -183,12 +183,12 @@ void AGAS_RepGraphCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 void AGAS_RepGraphCharacter::Move(const FInputActionValue& Value)
 {
-	// input is a Vector2D
+	// Входное значение осей движения.
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
 	if (Controller != nullptr)
 	{
-		// add movement 
+		// Добавляем движение по локальным осям.
 		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
 		AddMovementInput(GetActorRightVector(), MovementVector.X);
 	}
@@ -196,12 +196,12 @@ void AGAS_RepGraphCharacter::Move(const FInputActionValue& Value)
 
 void AGAS_RepGraphCharacter::Look(const FInputActionValue& Value)
 {
-	// input is a Vector2D
+	// Входное значение осей обзора.
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
 	if (Controller != nullptr)
 	{
-		// add yaw and pitch input to controller
+		// Передаем поворот контроллеру (yaw/pitch).
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}

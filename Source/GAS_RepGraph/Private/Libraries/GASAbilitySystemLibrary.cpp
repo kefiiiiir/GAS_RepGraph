@@ -8,8 +8,8 @@
 
 UCharacterClassInfo* UGASAbilitySystemLibrary::GetCharacterClassDefaultInfo(const UObject* WorldContextObject)
 {
-	// Получаем текущий GameMode и преобразуем его к нашей пользовательской реализации.
-	// GameMode существует только на сервере, поэтому на клиентах будет возвращен nullptr.
+	// Получаем текущий режим игры и преобразуем его к нашей пользовательской реализации.
+	// Режим игры существует только на сервере, поэтому на клиентах будет возвращен nullptr.
 	if (const AGAS_RepGraphGameMode* GASGameMode = Cast<AGAS_RepGraphGameMode>(UGameplayStatics::GetGameMode(WorldContextObject)))
 	{
 		// Получаем данные конфигурации класса из игрового режима.

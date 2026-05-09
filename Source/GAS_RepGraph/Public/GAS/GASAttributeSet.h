@@ -14,7 +14,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 /**
- * 
+ * Набор базовых атрибутов персонажа для системы GAS.
+ * Содержит здоровье, ману и выносливость с репликацией на клиентов.
  */
 UCLASS()
 class GAS_REPGRAPH_API UGASAttributeSet : public UAttributeSet

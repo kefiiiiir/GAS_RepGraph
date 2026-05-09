@@ -81,10 +81,10 @@ void UGASReplicationGraph::InitGlobalGraphNodes()
 {
 	Super::InitGlobalGraphNodes();
 	
-	// Создаем ноду
+	// Создаем ноду глобально всегда-актуальных акторов.
 	AlwaysRelevantNode = CreateNewNode<UReplicationGraphNode_AlwaysRelevant_WithPending>();
 	
-	// Добавляем ее в глобальный скоуп
+	// Добавляем ее в глобальный граф репликации.
 	AddGlobalGraphNode(AlwaysRelevantNode);
 	
 	UE_LOG(LogTemp, Warning, TEXT(">>> GAS REPLICATION GRAPH ACTIVE <<<"));
@@ -164,13 +164,13 @@ UGASReplicationGraphConnection* UGASReplicationGraph::GetConnectionForActor(cons
 	if (!Actor)
 		return nullptr;
 
-	// STEP 1: direct connection (rare but valid)
+	// ШАГ 1: прямое сетевое соединение у актора (редкий, но валидный случай).
 	if (UNetConnection* Conn = Actor->GetNetConnection())
 	{
 		return Cast<UGASReplicationGraphConnection>(FindOrAddConnectionManager(Conn));
 	}
 
-	// STEP 2: Pawn → Controller → PlayerState → Connection (correct chain)
+	// ШАГ 2: Pawn -> Controller -> PlayerState -> Connection (основная корректная цепочка).
 	if (const APawn* Pawn = Cast<APawn>(Actor))
 	{
 		if (const AController* Controller = Pawn->GetController())
@@ -190,7 +190,7 @@ UGASReplicationGraphConnection* UGASReplicationGraph::GetConnectionForActor(cons
 		}
 	}
 
-	// STEP 3: PlayerController fallback
+	// ШАГ 3: fallback через владельца PlayerController.
 	if (const APlayerController* PC = Cast<APlayerController>(Actor->GetOwner()))
 	{
 		if (UNetConnection* Conn = PC->GetNetConnection())

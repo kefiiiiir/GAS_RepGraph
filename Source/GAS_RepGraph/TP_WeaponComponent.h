@@ -14,47 +14,47 @@ class GAS_REPGRAPH_API UTP_WeaponComponent : public USkeletalMeshComponent
 	GENERATED_BODY()
 
 public:
-	/** Projectile class to spawn */
+	/** Класс снаряда для спавна */
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AGAS_RepGraphProjectile> ProjectileClass;
 
-	/** Sound to play each time we fire */
+	/** Звук, который проигрывается при каждом выстреле */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	USoundBase* FireSound;
 	
-	/** AnimMontage to play each time we fire */
+	/** Анимационный монтаж, проигрываемый при каждом выстреле */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	UAnimMontage* FireAnimation;
 
-	/** Gun muzzle's offset from the characters location */
+	/** Смещение дула оружия относительно персонажа */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector MuzzleOffset;
 
-	/** MappingContext */
+	/** Контекст сопоставления ввода */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputMappingContext* FireMappingContext;
 
-	/** Fire Input Action */
+	/** Действие ввода для стрельбы */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* FireAction;
 
-	/** Sets default values for this component's properties */
+	/** Устанавливает значения по умолчанию для свойств компонента */
 	UTP_WeaponComponent();
 
-	/** Attaches the actor to a FirstPersonCharacter */
+	/** Прикрепляет оружие к персонажу от первого лица */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void AttachWeapon(AGAS_RepGraphCharacter* TargetCharacter);
 
-	/** Make the weapon Fire a Projectile */
+	/** Выполняет выстрел снарядом */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
 
 protected:
-	/** Ends gameplay for this component. */
+	/** Завершает работу компонента при окончании игры/жизни актора. */
 	UFUNCTION()
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
-	/** The Character holding this weapon*/
+	/** Персонаж, который держит это оружие */
 	AGAS_RepGraphCharacter* Character;
 };

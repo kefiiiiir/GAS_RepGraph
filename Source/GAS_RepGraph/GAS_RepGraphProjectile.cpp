@@ -6,20 +6,20 @@
 
 AGAS_RepGraphProjectile::AGAS_RepGraphProjectile() 
 {
-	// Use a sphere as a simple collision representation
+	// Используем сферу как простое представление коллизии.
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	CollisionComp->InitSphereRadius(5.0f);
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
-	CollisionComp->OnComponentHit.AddDynamic(this, &AGAS_RepGraphProjectile::OnHit);		// set up a notification for when this component hits something blocking
+	CollisionComp->OnComponentHit.AddDynamic(this, &AGAS_RepGraphProjectile::OnHit);		// Подписываемся на событие блокирующего столкновения.
 
-	// Players can't walk on it
+	// Игроки не могут ходить по снаряду.
 	CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
 	CollisionComp->CanCharacterStepUpOn = ECB_No;
 
-	// Set as root component
+	// Назначаем корневым компонентом.
 	RootComponent = CollisionComp;
 
-	// Use a ProjectileMovementComponent to govern this projectile's movement
+	// Компонент движения управляет траекторией снаряда.
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
 	ProjectileMovement->InitialSpeed = 3000.f;
@@ -27,13 +27,13 @@ AGAS_RepGraphProjectile::AGAS_RepGraphProjectile()
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 
-	// Die after 3 seconds by default
+	// По умолчанию снаряд уничтожается через 3 секунды.
 	InitialLifeSpan = 3.0f;
 }
 
 void AGAS_RepGraphProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Only add impulse and destroy projectile if we hit a physics
+	// Импульс и уничтожение выполняем только при попадании в физический объект.
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());

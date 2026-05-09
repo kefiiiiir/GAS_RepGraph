@@ -4,7 +4,7 @@
 
 UTP_PickUpComponent::UTP_PickUpComponent()
 {
-	// Setup the Sphere Collision
+	// Настраиваем сферическую коллизию.
 	SphereRadius = 32.f;
 }
 
@@ -12,20 +12,20 @@ void UTP_PickUpComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Register our Overlap Event
+	// Регистрируем обработчик события перекрытия.
 	OnComponentBeginOverlap.AddDynamic(this, &UTP_PickUpComponent::OnSphereBeginOverlap);
 }
 
 void UTP_PickUpComponent::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// Checking if it is a First Person Character overlapping
+	// Проверяем, что перекрытие произошло с персонажем от первого лица.
 	AGAS_RepGraphCharacter* Character = Cast<AGAS_RepGraphCharacter>(OtherActor);
 	if(Character != nullptr)
 	{
-		// Notify that the actor is being picked up
+		// Уведомляем подписчиков, что объект был подобран.
 		OnPickUp.Broadcast(Character);
 
-		// Unregister from the Overlap Event so it is no longer triggered
+		// Отписываемся от события, чтобы больше не срабатывать.
 		OnComponentBeginOverlap.RemoveAll(this);
 	}
 }

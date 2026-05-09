@@ -12,11 +12,11 @@ class GAS_REPGRAPH_API AColorActor : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+	// Устанавливает значения по умолчанию для свойств актора.
 	AColorActor();
 
 protected:
-	// Called when the game starts or when spawned
+	// Вызывается при старте игры или при спавне.
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

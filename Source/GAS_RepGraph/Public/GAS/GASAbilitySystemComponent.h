@@ -57,7 +57,7 @@ public:
 	*/
 	void InitializeDefaultAttributes(const TSubclassOf<UGameplayEffect>& AttributeEffect);
 
-	/** Activates the first granted ability that contains the provided ability tag. */
+	/** Активирует первую выданную способность, содержащую указанный тег способности. */
 	UFUNCTION(BlueprintCallable, Category="Abilities")
 	bool TryActivateAbilityByTag(const FGameplayTag& AbilityTag);
 	

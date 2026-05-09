@@ -17,6 +17,7 @@ void UGA_PlaySoundAndEffect::ActivateAbility(
 	const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
+	// Списываем стоимость/кулдаун способности; если не получилось — завершаем с откатом.
 	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
@@ -28,6 +29,7 @@ void UGA_PlaySoundAndEffect::ActivateAbility(
 
 	if (ActivationSound && AvatarActor)
 	{
+		// Проигрываем звук в точке аватара, чтобы его слышали окружающие.
 		UGameplayStatics::PlaySoundAtLocation(this, ActivationSound, AvatarActor->GetActorLocation());
 	}
 
@@ -37,6 +39,7 @@ void UGA_PlaySoundAndEffect::ActivateAbility(
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(EffectToApply, EffectLevel, EffectContext);
 		if (SpecHandle.IsValid())
 		{
+			// Применяем эффект к самому владельцу способности.
 			SourceASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 		}
 	}

@@ -5,10 +5,10 @@
 
 #include "Net/UnrealNetwork.h"
 
-// Sets default values
+// Устанавливает значения по умолчанию.
 AColorActor::AColorActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Tick отключен, так как он не нужен для логики актора.
 	PrimaryActorTick.bCanEverTick = false;
 	
 	bReplicates = true;
@@ -18,7 +18,7 @@ AColorActor::AColorActor()
 
 }
 
-// Called when the game starts or when spawned
+// Вызывается при старте игры или при спавне.
 void AColorActor::BeginPlay()
 {
 	Super::BeginPlay();

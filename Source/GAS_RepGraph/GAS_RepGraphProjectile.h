@@ -14,24 +14,24 @@ class AGAS_RepGraphProjectile : public AActor
 {
 	GENERATED_BODY()
 
-	/** Sphere collision component */
+	/** Сферический компонент коллизии */
 	UPROPERTY(VisibleDefaultsOnly, Category=Projectile)
 	USphereComponent* CollisionComp;
 
-	/** Projectile movement component */
+	/** Компонент движения снаряда */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
 public:
 	AGAS_RepGraphProjectile();
 
-	/** called when projectile hits something */
+	/** Вызывается при столкновении снаряда */
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
-	/** Returns CollisionComp subobject **/
+	/** Возвращает подобъект `CollisionComp` **/
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }
-	/** Returns ProjectileMovement subobject **/
+	/** Возвращает подобъект `ProjectileMovement` **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 };
 
