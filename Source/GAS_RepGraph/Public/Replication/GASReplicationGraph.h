@@ -9,6 +9,20 @@
 /**
  * 
  */
+
+UCLASS()
+class UReplicationGraphNode_AlwaysRelevant_WithPending : public UReplicationGraphNode_AlwaysRelevant
+{
+	GENERATED_BODY()
+	
+public:
+	UReplicationGraphNode_AlwaysRelevant_WithPending();
+	
+private:
+	
+	virtual void PrepareForReplication() override;
+};
+
 UCLASS()
 class GAS_REPGRAPH_API UGASReplicationGraph : public UReplicationGraph
 {
@@ -17,6 +31,8 @@ class GAS_REPGRAPH_API UGASReplicationGraph : public UReplicationGraph
 public:
 	
 	UGASReplicationGraph();
+	
+	void HandlePendingActors();
 	
 protected:
 	
@@ -33,7 +49,9 @@ private:
 private:
 	
 	UPROPERTY()
-	UReplicationGraphNode_AlwaysRelevant* AlwaysRelevantNode;
+	UReplicationGraphNode_AlwaysRelevant_WithPending* AlwaysRelevantNode;
+	
+	TArray<AActor*, TInlineAllocator<16>> PendingActors;
 	
 };
 
@@ -54,9 +72,14 @@ class GAS_REPGRAPH_API UGASReplicationGraphConnection : public UNetReplicationGr
 	
 private:
 	
+	UPROPERTY()
 	UReplicationGraphNode_CubeRelevancy* CubeRelevancyNode;
 	
+	UPROPERTY()
 	UReplicationGraphNode_AlwaysRelevant_ForConnection* AlwaysRelevantForConnectionNode;
+	
+	UPROPERTY()
+	UReplicationGraphNode_ActorList* ActorListNode;
 	
 	uint8 bCubeRelevant;
 };

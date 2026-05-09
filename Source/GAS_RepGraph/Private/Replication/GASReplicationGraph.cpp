@@ -6,6 +6,39 @@
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/PlayerState.h"
 
+UReplicationGraphNode_AlwaysRelevant_WithPending::UReplicationGraphNode_AlwaysRelevant_WithPending()
+{
+	bRequiresPrepareForReplicationCall = true;
+}
+
+void UReplicationGraphNode_AlwaysRelevant_WithPending::PrepareForReplication()
+{
+	Super::PrepareForReplication();
+	
+	if (UGASReplicationGraph* RepGraph = Cast<UGASReplicationGraph>(GetOuter()))
+	{
+		RepGraph->HandlePendingActors();
+	}
+}
+
+void UGASReplicationGraph::HandlePendingActors()
+{
+	if (PendingActors.IsEmpty())
+		return;
+	
+	TArray<AActor*, TInlineAllocator<16>> NewPendingActors = MoveTemp(PendingActors);
+	
+	for (AActor* Actor : NewPendingActors)
+	{
+		if (Actor)
+		{
+			FGlobalActorReplicationInfo& GlobalInfo = GlobalActorReplicationInfoMap.Get(Actor);
+			
+			RouteAddNetworkActorToNodes(FNewReplicatedActorInfo(Actor), GlobalInfo);
+		}
+	}
+}
+
 UGASReplicationGraph::UGASReplicationGraph()
 {
 	ReplicationConnectionManagerClass =	UGASReplicationGraphConnection::StaticClass();
@@ -16,7 +49,7 @@ void UGASReplicationGraph::InitGlobalGraphNodes()
 	Super::InitGlobalGraphNodes();
 	
 	// Создаем ноду
-	AlwaysRelevantNode = CreateNewNode<UReplicationGraphNode_AlwaysRelevant>();
+	AlwaysRelevantNode = CreateNewNode<UReplicationGraphNode_AlwaysRelevant_WithPending>();
 	
 	// Добавляем ее в глобальный скоуп
 	AddGlobalGraphNode(AlwaysRelevantNode);
@@ -32,11 +65,23 @@ void UGASReplicationGraph::RouteAddNetworkActorToNodes(const FNewReplicatedActor
 	if (ActorInfo.Class->IsChildOf(AGameStateBase::StaticClass()) || ActorInfo.Class->IsChildOf(APlayerState::StaticClass()))
 	{
 		AlwaysRelevantNode->AddAlwaysRelevantClass(ActorInfo.Class);
+		return;
 	}
 	
-	if (UGASReplicationGraphConnection* Connection = GetConnectionForActor(ActorInfo.Actor); ActorInfo.Actor->bOnlyRelevantToOwner && Connection)
+	if (UGASReplicationGraphConnection* Connection = GetConnectionForActor(ActorInfo.Actor))
 	{
-		Connection->AlwaysRelevantForConnectionNode->NotifyAddNetworkActor(ActorInfo);
+		if (ActorInfo.Actor->bOnlyRelevantToOwner)
+		{
+			Connection->AlwaysRelevantForConnectionNode->NotifyAddNetworkActor(ActorInfo);
+		}
+		else
+		{
+			Connection->ActorListNode->NotifyAddNetworkActor(ActorInfo);
+		}
+	} 
+	else if (ActorInfo.Actor->HasNetOwner())
+	{
+		PendingActors.Add(ActorInfo.Actor);
 	}
 }
 
@@ -55,6 +100,10 @@ void UGASReplicationGraph::InitConnectionGraphNodes(UNetReplicationGraphConnecti
 		GraphConnection->CubeRelevancyNode = CreateNewNode<UReplicationGraphNode_CubeRelevancy>();
 		
 		AddConnectionGraphNode(GraphConnection->CubeRelevancyNode, GraphConnection);
+		
+		GraphConnection->ActorListNode = CreateNewNode<UReplicationGraphNode_ActorList>();
+		
+		AddConnectionGraphNode(GraphConnection->ActorListNode, GraphConnection);
 	}
 }
 
